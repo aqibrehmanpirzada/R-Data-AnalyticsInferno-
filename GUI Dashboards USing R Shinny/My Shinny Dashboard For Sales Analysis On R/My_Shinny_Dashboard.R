@@ -10,17 +10,17 @@ superstore_data <- read_excel("SuperStore_SalesData_8Aug2020.xlsx")
 sales_sample_data <- read.csv("Sales_Sample.csv")
 #Sample data for illustration purposes
 superstore_data <- data.frame(
-  Region = c("North", "South", "East", "West"),
-  Sales = c(100, 150, 120, 200)
+  Region = sales_sample_data$Region,
+  Sales = sales_sample_data$Sales
 )
 
 sales_sample_data <- data.frame(
-  SalesRep = c("Amy", "Bob", "Charlie"),
-  Region = c("North", "South", "East"),
-  QTR = c(1, 2, 3),
-  Sales = c(30, 40, 25),
-  Units_Sold = c(100, 120, 80)
+  SalesRep = superstore_data$Region,
+  QTR = sales_sample_data$QTR,
+  Sales = sales_sample_data$Sales,
+  Units_Sold = sales_sample_data$Units_Sold
 )
+
 #
 # # Define UI
 ui <- dashboardPage(
@@ -154,11 +154,13 @@ server <- function(input, output) {
   # Pie Chart
   output$pieChart <- renderPlot({
     ggplot(superstore_data, aes(x = "", y = Sales, fill = Region)) +
-      geom_bar(stat = "pie", width = 1) +
+      geom_bar(stat = "identity", width = 1) +
       labs(title = "Pie Chart", x = "", y = "") +
       theme_void() +
-      scale_fill_brewer(palette = "Set3")
+      scale_fill_brewer(palette = "Set3") +
+      coord_polar(theta = "y")
   })
+  
 }
 
 # Run the application
